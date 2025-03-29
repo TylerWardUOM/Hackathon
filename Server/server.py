@@ -8,10 +8,14 @@ def status():
     return jsonify({"status": "Running", "device": "Raspberry Pi"})
 
 # Example: Receive data via POST request
-@app.route('/data', methods=['POST'])
+@app.route('/attend', methods=['POST'])
 def receive_data():
-    data = request.json  # Get Student Name From request
-    return jsonify({"received": data, "message": "Data received successfully!"})
+    data = request.json  # Get Student Name from request
+    
+    if not data or "studentName" not in data:
+        return jsonify({"error": "Missing 'studentName' in request"}), 400
+
+    return jsonify({"Marked as Attended": data["studentName"]})
 
 # Run the server
 if __name__ == '__main__':

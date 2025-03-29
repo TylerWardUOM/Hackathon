@@ -8,6 +8,6 @@ response = requests.get(f"{BASE_URL}/status")
 print("Response from /status:", response.json())
 
 # Send data using a POST request
-data = {"name": "Alice", "temperature": 36.5}
+data = {"studentName": "Alice", "temperature": 36.5}
 response = requests.post(f"{BASE_URL}/data", json=data)
 print("Response from /data:", response.json())
