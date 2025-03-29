@@ -1,17 +1,17 @@
-class Database():
+class Database:
     def __init__(self):
-        self.students = []  # List of tuples (StudentName, AttendedFlag)
+        self.students = []  # List of dictionaries for easier updates
 
     def attendStudent(self, StudentName):
         """Adds a student with a default False (not verified) flag."""
-        self.students.append((StudentName, False))
+        if not any(student["name"] == StudentName for student in self.students):  
+            self.students.append({"name": StudentName, "attended": False})
 
     def verifyStudent(self, StudentName):
         """Updates the student's attendance flag to True if they exist in the list."""
-        for i in range(len(self.students)):
-            name = self.students[i][0]
-            if name == StudentName:
-                self.students[i] = (name, True)  # Update flag to True
+        for student in self.students:
+            if student["name"] == StudentName:
+                student["attended"] = True
                 return True  # Return True if student found and updated
         return False  # Return False if student not found
 
@@ -25,7 +25,7 @@ db = Database()
 db.attendStudent("Alice")
 db.attendStudent("Bob")
 
-print(db.getStudents())  # [('Alice', False), ('Bob', False)]
+print(db.getStudents())  # [{'name': 'Alice', 'attended': False}, {'name': 'Bob', 'attended': False}]
 
 db.verifyStudent("Alice")
-print(db.getStudents())  # [('Alice', True), ('Bob', False)]
+print(db.getStudents())  # [{'name': 'Alice', 'attended': True}, {'name': 'Bob', 'attended': False}]
