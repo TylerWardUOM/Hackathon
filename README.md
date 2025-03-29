@@ -1,5 +1,9 @@
 # Hackathon
 
+Config Folder for any config files eg camera config
+Data Folder: For data e.g Known Faces
+Models Folder: For Face Recogntion Model
+Scripts: Utility Scripts and other Files
 
 Plan Seats but Better
 
