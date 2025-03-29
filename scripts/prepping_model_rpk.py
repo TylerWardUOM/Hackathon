@@ -15,3 +15,17 @@ class SFace_PT(Model):
 
     def post_process(self, output_tensors: List[np.ndarray]) -> Detections:
         return pp_od_bscn(output_tensors)
+
+device = AiCamera()
+model = SFace_PT()
+device.deploy(model)
+
+annotator = Annotator(thickness=1, text_thickness=1, text_scale=0.4)
+
+with device as stream:
+    for frame in stream:
+        detections = frame.detections[frame.detections.confidence > 0.55]
+        #labels = [f"{model.labels[class_id]}: {score:0.2f}" for _, score, class_id, _ in detections]
+        
+        annotator.annotate_boxes(frame, detections)
+        frame.display()
