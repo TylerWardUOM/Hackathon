@@ -11,7 +11,7 @@ while True:
         print("Received:", line)
 
         # Check if the input follows the format "StudentName: tyler"
-        if line.startswith("StudentName:"):
+        if line.startswith("Student name:"):
             print("Valid")
             student_name = line.split(":")[1].strip()  # Extract the name
             apiRequests.attend_student(student_name)  # Call the function with the extracted name
