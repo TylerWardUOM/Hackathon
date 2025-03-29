@@ -1,0 +1,2 @@
+# <class_id> | <class_name> | <color(HEX)> | <detection_threshold>
+0 | Jamie | #FF0000 | 0.45
