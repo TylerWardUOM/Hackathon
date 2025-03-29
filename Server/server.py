@@ -8,7 +8,7 @@ def status():
     return jsonify({"status": "Running", "device": "Raspberry Pi"})
 
 # Example: Receive data via POST request
-@app.route('/attend', methods=['POST'])
+@app.route('/data', methods=['POST'])
 def receive_data():
     data = request.json  # Get Student Name From request
     return jsonify({"received": data, "message": "Data received successfully!"})
