@@ -99,7 +99,7 @@ def camera_loop():
 
     with device as stream:
         for frame in stream:
-            detections = frame.detections[frame.detections.confidence > 0.8]
+            detections = frame.detections[frame.detections.confidence > 0.65]
             detections = detections[detections.class_id == 0]
             detections = tracker.update(frame, detections)
             
