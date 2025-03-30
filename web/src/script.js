@@ -2,6 +2,10 @@ const BASE_URL = "http://10.209.195.140:5000";  // Change to Pi's IP if calling 
 const REFRESH_INTERVAL = 5000; // Refresh every 5 seconds
 
 async function getAttendance() {
+
+    const tableBody = document.querySelector("#attendance-table tbody");
+    tableBody.innerHTML = "<tr><td colspan='2'>Loading...</td></tr>";
+
     try {
         const response = await fetch(`${BASE_URL}/attendance`, {
             method: "GET",
@@ -24,21 +28,41 @@ async function getAttendance() {
         });
 
         console.log("Formatted Attendance Object:", attendanceObj);
-        updateAttendanceList(attendanceObj);
+        updateAttendanceTable(attendanceObj);
     } catch (error) {
         console.error("Error fetching attendance:", error);
-        document.getElementById("attendance-list").innerHTML = "<p>Error loading attendance.</p>";
+        //document.getElementById("attendance-list").innerHTML = "<p>Error loading attendance.</p>";
+
+        //const tableBody = document.querySelector("#attendance-table tbody");
+        tableBody.innerHTML = "<tr><td colspan = '2'>Loading...</td></tr>";
     }
 }
 
-function updateAttendanceList(attendanceObj) {
-    const attendanceDiv = document.getElementById("attendance-list");
+function updateAttendanceTable(attendanceObj) {
+    const tableBody = document.querySelector("#attendance-table tbody");
 
     // Clear previous content
-    attendanceDiv.innerHTML = "";
+    tableBody.innerHTML = "";
+
+    for (const [name, attended] of Object.entries(attendanceObj)) {
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = name;
+
+        const statusCell = document.createElement("td");
+        statusCell.innerHTML = attended ? "✅ Present" : "❌ Not Verified";
+
+        row.appendChild(nameCell);
+        row.appendChild(statusCell);
+        tableBody.appendChild(row);
+    }
+}
 
     // Create an unordered list
-    const ul = document.createElement("ul");
+
+
+    /* const ul = document.createElement("ul");
 
     // Loop through attendanceObj and create list items
     for (const [name, attended] of Object.entries(attendanceObj)) {
@@ -48,8 +72,8 @@ function updateAttendanceList(attendanceObj) {
     }
 
     // Append list to div
-    attendanceDiv.appendChild(ul);
-}
+    attendanceDiv.appendChild(ul); */
+
 
 // Call getAttendance on page load
 window.onload = () => {
