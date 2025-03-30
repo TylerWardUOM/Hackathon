@@ -8,10 +8,11 @@ async function getAttendance() {
 
     try {
         const response = await fetch(`${BASE_URL}/attendance`, {
-            method: "GET",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            body: JSON.stringify({"lectureName": "Advanced Robotics"})
         });
 
         if (!response.ok) {
@@ -24,19 +25,24 @@ async function getAttendance() {
         // Convert response into an object with student names as keys
         const attendanceObj = {};
         data.attended.forEach(student => {
-            attendanceObj[student.name] = student.attended;
+            // Create an object for each student using their name as the key
+            attendanceObj[student.name] = {
+                attendance_status: student.attendance_status,
+                attendance_percentage: student.attendance_percentage,
+                course: student.course,
+                year: student.year,
+                Verified: student.Verified
+            };
         });
 
         console.log("Formatted Attendance Object:", attendanceObj);
         updateAttendanceTable(attendanceObj);
     } catch (error) {
         console.error("Error fetching attendance:", error);
-        //document.getElementById("attendance-list").innerHTML = "<p>Error loading attendance.</p>";
-
-        //const tableBody = document.querySelector("#attendance-table tbody");
-        tableBody.innerHTML = "<tr><td colspan = '2'>Loading...</td></tr>";
+        tableBody.innerHTML = "<tr><td colspan='2'>Error loading attendance.</td></tr>";
     }
 }
+
 
 function updateAttendanceTable(attendanceObj) {
     const tableBody = document.querySelector("#attendance-table tbody");
@@ -44,20 +50,48 @@ function updateAttendanceTable(attendanceObj) {
     // Clear previous content
     tableBody.innerHTML = "";
 
-    for (const [name, attended] of Object.entries(attendanceObj)) {
+    for (const [name, data] of Object.entries(attendanceObj)) {
         const row = document.createElement("tr");
 
         const nameCell = document.createElement("td");
         nameCell.textContent = name;
+        nameCell.style.cursor = 'pointer';
+        nameCell.onclick = () => showModal(name, data);
 
         const statusCell = document.createElement("td");
-        statusCell.innerHTML = attended ? "✅ Present" : "❌ Not Verified";
+        statusCell.innerHTML = data.attendance_status ? "✅ Present" : "❌ Not Present";
+
+        const verifiedCell = document.createElement("td");
+        verifiedCell.textContent = data.Verified ? "✅ Verified" : "❌ Not Verified";
 
         row.appendChild(nameCell);
         row.appendChild(statusCell);
+        row.appendChild(verifiedCell);
         tableBody.appendChild(row);
     }
 }
+
+function showModal(name, data) {
+
+    document.getElementById("modal-title").textContent = `${name}'s Details`;
+    document.getElementById("modal-attendance-percentage").textContent = data.attendance_percentage + "%";
+    document.getElementById("modal-course").textContent = data.course;
+    document.getElementById("modal-year").textContent = data.year;
+    //document.getElementById("modal-verified").textContent = data.Verified ? "✅ Verified" : "❌ Not Verified";
+
+    document.getElementById("modal").style.display = "block";
+
+}
+
+document.getElementById("close-modal").onclick = () => {
+    document.getElementById("modal").style.display = "none";
+    };
+
+window.onclick = (event) => {
+    if (event.target === document.getElementById("modal")) {
+        document.getElementById("modal").style.display = "none";
+    }
+};
 
     // Create an unordered list
 
