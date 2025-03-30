@@ -20,9 +20,10 @@ class AttendanceTracker():
 
     def process_attendance(self, user_id):
         if user_id not in self.seenId:
-            print("user found")
+            #print("user found")
             name = database.getNext()
             if name != None:
+                print(name)
                 self.currentAttendants.append((name, datetime.now()))
 
     def check_attendance(self):
@@ -102,7 +103,7 @@ def camera_loop():
             for detection in detections:
                 track_id = detection[3]
                 attendance_tracker.process_attendance(track_id)
-                tracker.add_detection(track_id)
+                #tracker.add_detection(track_id)
             labels = [f"#{t} {model.labels[c]}: {s:0.2f}" for _, s, c, t in detections]
             annotator.annotate_boxes(frame, detections, labels=labels)
 
