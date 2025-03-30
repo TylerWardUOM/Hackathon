@@ -2,17 +2,17 @@ import sqlite3
 
 class Database:
     def __init__(self):
-        self.students = []  # List of dictionaries for easier updates
+        self.attended_students = []  # List of dictionaries of Currently Attended Students
         self.db_name = 'university.db'
 
     def attendStudent(self, StudentName):
         """Adds a student with a default False (not verified) flag."""
-        if not any(student["name"] == StudentName for student in self.students):  
+        if not any(student["name"] == StudentName for student in self.attended_students):  
             self.students.append({"name": StudentName, "verified": False})
 
     def verifyStudent(self, StudentName):
         """Updates the student's verified flag to True if they exist in the list."""
-        for student in self.students:
+        for student in self.attended_students:
             if student["name"] == StudentName:
                 student["verified"] = True
                 return True  # Return True if student found and updated
@@ -41,7 +41,7 @@ class Database:
         for student in students:
             # Find the corresponding student from self.students
             found_student = None
-            for student_local in self.students:
+            for student_local in self.attended_students:
                 if student_local["name"] == student[0]:
                     found_student = student_local
                     break  # Once found, break the loop
