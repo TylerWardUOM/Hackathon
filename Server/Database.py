@@ -4,11 +4,13 @@ class Database:
     def __init__(self):
         self.attended_students = []  # List of dictionaries of Currently Attended Students
         self.db_name = 'university.db'
+        self.studentBuffer = []
 
     def attendStudent(self, StudentName):
         """Adds a student with a default False (not verified) flag."""
         if not any(student["name"] == StudentName for student in self.attended_students):  
-            self.students.append({"name": StudentName, "verified": False})
+            self.attended_students.append({"name": StudentName, "verified": False})
+            self.studentBuffer.append(StudentName)
 
     def verifyStudent(self, StudentName):
         """Updates the student's verified flag to True if they exist in the list."""
@@ -70,6 +72,13 @@ class Database:
 
         return student_list
 
+    def getNext(self):
+        if len(self.studentBuffer)!=0:
+            next=self.studentBuffer[0]
+            self.studentBuffer.pop(0)
+        else:
+            next=None
+        return next
 
 # # Example usage:
 # db = Database()
@@ -85,3 +94,9 @@ class Database:
 # # Fetch students for a specific lecture
 # students_in_lecture = db.getStudents("Advanced Robotics")
 # print(students_in_lecture)
+
+# print(db.getNext())
+# print(db.getNext())
+# print(db.getNext())
+# print(db.getNext())
+# print(db.getNext())
