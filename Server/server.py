@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request
 from Database import Database
+from flask_cors import CORS  # Import CORS
 
 database=Database()
 
 app = Flask(__name__)
-
+CORS(app)  # Enable CORS for all routes
 
 @app.route('/status', methods=['GET'])
 def status():
