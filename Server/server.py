@@ -29,7 +29,7 @@ class AttendanceTracker():
     def check_attendance(self):
         attended = []
         for name, allotted_time in self.currentAttendants:
-            if allotted_time + 300 > datetime.now():
+            if allotted_time - datetime.now() > timedelta(seconds=3):
                 attended.append(name)
                 self.currentAttendants.remove((name, allotted_time))
         return attended
@@ -102,6 +102,7 @@ def camera_loop():
             
             for detection in detections:
                 track_id = detection[3]
+                print(track_id)
                 attendance_tracker.process_attendance(track_id)
                 #tracker.add_detection(track_id)
             labels = [f"#{t} {model.labels[c]}: {s:0.2f}" for _, s, c, t in detections]
