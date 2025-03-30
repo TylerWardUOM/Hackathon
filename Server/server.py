@@ -32,7 +32,7 @@ class AttendanceTracker():
         attended = []
         for name, allotted_time in self.currentAttendants:
             print((name, allotted_time))
-            if datetime.now()-allotted_time > timedelta(seconds=300):
+            if datetime.now()-allotted_time > timedelta(seconds=3):
                 attended.append(name)
                 self.currentAttendants.remove((name, allotted_time))
         return attended
