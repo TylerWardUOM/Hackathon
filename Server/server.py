@@ -29,6 +29,7 @@ class AttendanceTracker():
     def check_attendance(self):
         attended = []
         for name, allotted_time in self.currentAttendants:
+            print((name, allotted_time))
             if allotted_time - datetime.now() > timedelta(seconds=3):
                 attended.append(name)
                 self.currentAttendants.remove((name, allotted_time))
@@ -96,11 +97,12 @@ def camera_loop():
 
     with device as stream:
         for frame in stream:
-            detections = frame.detections[frame.detections.confidence > 0.55]
+            detections = frame.detections[frame.detections.confidence > 0.8]
             detections = detections[detections.class_id == 0]
             detections = tracker.update(frame, detections)
             
             for detection in detections:
+                print(detection)
                 track_id = detection[3]
                 print(track_id)
                 attendance_tracker.process_attendance(track_id)
