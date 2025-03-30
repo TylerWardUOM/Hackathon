@@ -20,14 +20,19 @@ class AttendanceTracker():
 
     def process_attendance(self, user_id):
         if user_id not in self.seenId:
+            #print(self.seenId)
+            #print("user found")
             name = database.getNext()
+            self.seenId.append(user_id)
             if name != None:
+                print(name)
                 self.currentAttendants.append((name, datetime.now()))
 
     def check_attendance(self):
         attended = []
         for name, allotted_time in self.currentAttendants:
-            if allotted_time + 300 > datetime.now():
+            print((name, allotted_time))
+            if datetime.now()-allotted_time > timedelta(seconds=300):
                 attended.append(name)
                 self.currentAttendants.remove((name, allotted_time))
         return attended
@@ -65,6 +70,7 @@ def verify():
     return jsonify({"Marked as Verified": data["studentName"]})
 
 def multipleVer(input_arr):
+    print('mult ver')
     for name in input_arr:
         database.verifyStudent(name)
 
@@ -77,7 +83,7 @@ def camera_loop():
     from modlib.models.zoo import SSDMobileNetV2FPNLite320x320
 
     class BYTETrackerArgs:
-        track_thresh: float = 0.25
+        track_thresh: float = 0.65
         track_buffer: int = 30
         match_thresh: float = 0.8
         aspect_ratio_thresh: float = 3.0
@@ -93,14 +99,16 @@ def camera_loop():
 
     with device as stream:
         for frame in stream:
-            detections = frame.detections[frame.detections.confidence > 0.55]
+            detections = frame.detections[frame.detections.confidence > 0.65]
             detections = detections[detections.class_id == 0]
             detections = tracker.update(frame, detections)
             
             for detection in detections:
+                print(detection)
                 track_id = detection[3]
+                print(track_id)
                 attendance_tracker.process_attendance(track_id)
-                tracker.add_detection(track_id)
+                #tracker.add_detection(track_id)
             labels = [f"#{t} {model.labels[c]}: {s:0.2f}" for _, s, c, t in detections]
             annotator.annotate_boxes(frame, detections, labels=labels)
 
@@ -110,6 +118,7 @@ def process_loop():
     while True:
         time.sleep(30)
         to_add = attendance_tracker.check_attendance()
+        print(f"to add {to_add}")
         multipleVer(to_add)
 
 if __name__ == '__main__':
@@ -118,3 +127,4 @@ if __name__ == '__main__':
     Thread(target=camera_loop, daemon=True).start()
     
     app.run(host='0.0.0.0', port=5000)
+
