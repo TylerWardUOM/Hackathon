@@ -11,8 +11,9 @@ def getStatus():
     response = requests.get(f"{BASE_URL}/status")
     print("Response from /status:", response.json())
 
-def getAttendance():
-    response = requests.get(f"{BASE_URL}/attendance")
+def getAttendance(lectureName):
+    data = {"lectureName": lectureName}
+    response = requests.post(f"{BASE_URL}/attendance", json=data)
     print("Response from /attendance:", response.json())
 
 def verifyStudent():
