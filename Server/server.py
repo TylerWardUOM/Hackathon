@@ -20,6 +20,7 @@ class AttendanceTracker():
 
     def process_attendance(self, user_id):
         if user_id not in self.seenId:
+            print("user found")
             name = database.getNext()
             if name != None:
                 self.currentAttendants.append((name, datetime.now()))
@@ -65,6 +66,7 @@ def verify():
     return jsonify({"Marked as Verified": data["studentName"]})
 
 def multipleVer(input_arr):
+    print('mult ver')
     for name in input_arr:
         database.verifyStudent(name)
 
@@ -110,6 +112,7 @@ def process_loop():
     while True:
         time.sleep(30)
         to_add = attendance_tracker.check_attendance()
+        print(f"to add {to_add}")
         multipleVer(to_add)
 
 if __name__ == '__main__':
@@ -118,3 +121,4 @@ if __name__ == '__main__':
     Thread(target=camera_loop, daemon=True).start()
     
     app.run(host='0.0.0.0', port=5000)
+
