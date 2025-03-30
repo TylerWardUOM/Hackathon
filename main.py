@@ -6,6 +6,9 @@ BASE_URL = "http://127.0.0.1:5000"  # Change to Pi's IP if calling externally
 
 # Test the API with a GET request
 
-while True:
-    apiRequests.getAttendance("Advanced Robotics")
-    time.sleep(0.5)
+
+apiRequests.attend_student("Tyler")
+apiRequests.attend_student("Harrison")
+apiRequests.attend_student("Jamie")
+apiRequests.attend_student("Conor")
+time.sleep(0.2)
