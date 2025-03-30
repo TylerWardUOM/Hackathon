@@ -22,9 +22,12 @@ def attend():
     database.attendStudent(data["studentName"])
     return jsonify({"Marked as Attended": data["studentName"]})
 
-@app.route('/attendance', methods=['GET'])
+@app.route('/attendance', methods=['POST'])
 def attendance():
-    return jsonify({"attended": database.getStudents()})
+    data = request.json  # Get Student Name from request
+    if not data or "lectureName" not in data:
+        return jsonify({"error": "Missing 'lectureName' in request"}), 400
+    return jsonify({"attended": database.getStudents(data["lectureName"])})
 
 
 @app.route('/verify', methods=['POST'])
