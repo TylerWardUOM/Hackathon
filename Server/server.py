@@ -20,8 +20,10 @@ class AttendanceTracker():
 
     def process_attendance(self, user_id):
         if user_id not in self.seenId:
+            #print(self.seenId)
             #print("user found")
             name = database.getNext()
+            self.seenId.append(user_id)
             if name != None:
                 print(name)
                 self.currentAttendants.append((name, datetime.now()))
